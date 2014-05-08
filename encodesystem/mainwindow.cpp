@@ -69,11 +69,165 @@ void MainWindow::code()
     file.close();
     if(text.contains('#'))
     {
-        QStringList temp = text.split("#");
-        QString head = temp.at(0);
-        text = temp.at(1);
-        QLabel fhl("File Head Length: "+QString::number(head.length()));
-        QLabel ADL("Actual Data Length: "+QString::number(text.length()));
+        qDebug()<<"#";
+        QStringList templist = text.split("#");
+        QString head = templist.at(0);
+        text = templist.at(1);
+        qDebug()<<"head:"<<head;
+        qDebug()<<text;
+        QLabel *FHL = new QLabel("File Head Length: "+QString::number(head.length()));
+        QLabel *ADL = new QLabel("Actual Data Length: "+QString::number(text.length()));
+
+        IntlNode<QChar>* root = new IntlNode<QChar>();
+        HuffNode<QChar>* temp = root;
+
+
+        qDebug()<<"length"<<head.length();
+        for(int i=1;i<head.length();i++)
+        {
+            qDebug()<<"i"<<i;
+
+                if(head.at(i-1)=='0')
+                {
+                     qDebug()<<"left";
+
+
+                    if(head.at(i)!='0'&&head.at(i)!='1')
+                    {
+                        qDebug()<<i<<"letter";
+                        LeafNode<QChar>* leafNode = new  LeafNode<QChar>(head.at(i));
+                        if(head.at(i-1)=='0')
+                        {
+                            dynamic_cast<IntlNode<QChar>* >(temp)->setLeft(leafNode);
+                            temp = root;
+                        }
+                        else
+                        {
+                            dynamic_cast<IntlNode<QChar>* >(temp)->setRight(leafNode);
+                            temp = root;
+                        }
+                        continue;
+                    }
+                    if(dynamic_cast<IntlNode<QChar>* >(temp)->left()==NULL)
+                    {
+                        IntlNode<QChar> *intlNode = new IntlNode<QChar>();
+                        dynamic_cast<IntlNode<QChar>* >(temp)->setLeft(intlNode);
+                        temp = intlNode;
+                    }
+                    else
+                    {
+                        temp = dynamic_cast<IntlNode<QChar>* >(temp)->left();
+                    }
+                }
+                else if(head.at(i-1)=='1')
+                {
+                    qDebug()<<"right";
+
+
+
+                    if(head.at(i)!='0'&&head.at(i)!='1')
+                    {
+                        qDebug()<<i<<"letter";
+                        LeafNode<QChar>* leafNode = new  LeafNode<QChar>(head.at(i));
+                        if(head.at(i-1)=='0')
+                        {
+                            dynamic_cast<IntlNode<QChar>* >(temp)->setLeft(leafNode);
+                            temp = root;
+                        }
+                        else
+                        {
+                            dynamic_cast<IntlNode<QChar>* >(temp)->setRight(leafNode);
+                            temp = root;
+                        }
+                        continue;
+
+                    }
+
+                    if(dynamic_cast<IntlNode<QChar>* >(temp)->right()==NULL)
+                    {
+
+                        IntlNode<QChar> *intlNode = new IntlNode<QChar>();
+                        dynamic_cast<IntlNode<QChar>* >(temp)->setRight(intlNode);
+                        temp = intlNode;
+                    }
+                    else
+                    {
+
+                        temp = dynamic_cast<IntlNode<QChar>* >(temp)->right();
+
+                    }
+
+                }
+            }
+
+
+        qDebug()<<"finish buildingTree";
+
+        QString decode;
+        for(int j=0;j<text.length();j++)
+        {
+            qDebug()<<"j"<<j;
+            qDebug()<<"text"<<text.at(j);
+            if(text.at(j) == '0')
+            {
+                qDebug()<<"left";
+                temp = dynamic_cast<IntlNode<QChar>* >(temp)->left();
+                if(temp->isLeaf())
+                {
+                    decode+= dynamic_cast<LeafNode<QChar>* >(temp)->val();
+
+                    temp = root;
+
+                }
+
+            }
+            else
+            {
+                qDebug()<<"right";
+                temp = dynamic_cast<IntlNode<QChar>* >(temp)->right();
+                if(temp->isLeaf())
+                {
+                    decode+= dynamic_cast<LeafNode<QChar>* >(temp)->val();
+                    temp = root;
+
+                }
+            }
+             qDebug()<<decode;
+        }
+
+        QString outputFileName(fileName);
+        outputFileName+=".decode";
+        QFile outputFile(outputFileName);
+
+
+        if (!outputFile.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            QMessageBox::information(this,"Error","Can't create the encode file!");
+            return;
+        }
+
+        qDebug()<<"open";
+         QTextStream out(&outputFile);
+         out<<decode;
+
+
+         QHBoxLayout *layout = new QHBoxLayout;
+         layout->addWidget(FHL);
+         layout->addWidget(ADL);
+         mainLayout->addLayout(layout);
+
+         QString dir("Decode    ");
+         dir+="<a href = ";
+         dir += outputFileName;
+         dir += ">";
+         dir += outputFileName;
+         dir +="</a>";
+         QLabel *fileDir = new QLabel(dir);
+         connect(fileDir,SIGNAL(linkActivated(QString)),this,SLOT(openCodeFile(QString)));
+
+         mainLayout->addWidget(fileDir);
+
+         QMessageBox::information(this,"Success","Decode success!");
 
 
 
@@ -152,6 +306,7 @@ void MainWindow::code()
          connect(fileDir,SIGNAL(linkActivated(QString)),this,SLOT(openCodeFile(QString)));
 
          mainLayout->addWidget(fileDir);
+         QMessageBox::information(this,"Success","Encode success!");
 
 
     }
@@ -185,18 +340,27 @@ template <typename E> HuffTree<E>* MainWindow::buildHuff(HuffTree<E>** TreeArray
 }
 template <typename E> void MainWindow::traverse(HuffNode<E>* root,QString str)
 {
+
     if(root->isLeaf())
     {
         str+=dynamic_cast<LeafNode<E>* >(root)->val();
         list.append(str);
         str.chop(2);
+        qDebug()<<"return";
         return;
+
     }
     str+="0";
     traverse(dynamic_cast<IntlNode<E>* >(root)->left(),str);
+    str.chop(1);
+
+    qDebug()<<"str"<<str;
     str+="1";
     traverse(dynamic_cast<IntlNode<E>* >(root)->right(),str);
+
+
     str.chop(1);
+     qDebug()<<"str"<<str;
     return;
 
 }
