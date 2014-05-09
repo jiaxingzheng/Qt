@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2014-05-06T13:06:08
+# Project created by QtCreator 2014-05-08T17:01:59
 #
 #-------------------------------------------------
 
@@ -12,11 +12,13 @@ TARGET = EncodeDecodeSystem
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += \
+    main.cpp \
+    mainwindow.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
     HuffNode.h \
+    HuffTree.h \
     IntlNode.h \
     LeafNode.h \
-    HuffTree.h
+    mainwindow.h

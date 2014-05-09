@@ -10,6 +10,7 @@ E it;
 int wgt;
 // Weight
 public:
+LeafNode(const E &val){ it = val;wgt = 0;}
 LeafNode(const E& val, int freq)
 // Constructor
 { it = val; wgt = freq; }

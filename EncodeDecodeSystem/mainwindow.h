@@ -10,8 +10,9 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTextStream>
-#include <QList>
 #include <QDebug>
+#include <QDesktopServices>
+#include <QUrl>
 
 #include "HuffTree.h"
 
@@ -40,11 +41,13 @@ private:
     template <typename E> void traverse(HuffNode<E>* root,QString str);
     template <typename E> int getMin(HuffTree<E>** TreeArray,int count);
     template <typename E> void remove(HuffTree<E>** TreeArray,int count,int i);
+
+
 private slots:
     void chooseFile();
     void code();
 
-
+    void openCodeFile(QString filename);
 
 };
 
