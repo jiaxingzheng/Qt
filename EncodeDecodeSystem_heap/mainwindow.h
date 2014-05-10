@@ -11,6 +11,8 @@
 #include <QMessageBox>
 #include <QTextStream>
 #include <QDebug>
+#include <QDesktopServices>
+#include <QUrl>
 
 #include "heap.h"
 #include "HuffTree.h"
@@ -42,7 +44,7 @@ private slots:
     void chooseFile();
     void code();
 
-
+    void openCodeFile(QString filename);
 
 };
 

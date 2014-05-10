@@ -12,6 +12,11 @@ HuffNode<E>* rc;
 int wgt;
 // Subtree weight
 public:
+IntlNode(){
+    lc = NULL;
+    rc = NULL;
+    wgt = 0;
+}
 IntlNode(HuffNode<E>* l, HuffNode<E>* r)
 { wgt = l->weight() + r->weight(); lc = l; rc = r; }
 int weight() { return wgt; }

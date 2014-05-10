@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2014-05-06T13:06:08
+# Project created by QtCreator 2014-05-10T13:07:00
 #
 #-------------------------------------------------
 
@@ -8,16 +8,18 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = EncodeDecodeSystem
+TARGET = EncodeDecodeSystem_heap
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += \
+    main.cpp \
+    mainwindow.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
+    heap.h \
     HuffNode.h \
+    HuffTree.h \
     IntlNode.h \
     LeafNode.h \
-    HuffTree.h \
-    heap.h
+    mainwindow.h
