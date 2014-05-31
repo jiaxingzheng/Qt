@@ -189,7 +189,7 @@ void MainWindow::code()
         QString contig;
         contig+=hashTable->getFirPrefix();
         contig+=hashTable->getSecPrefix();
-        while(hashTable->getFreInRead()!=0)
+        while(hashTable->getFreInRead()!=0&&hashTable->getFreInContig()!=1)
         {
 
             //qDebug()<<"while"<<endl;
@@ -248,7 +248,7 @@ void MainWindow::code()
     unsigned int meanLength = totalLength/contigList.length();
     std::sort(length,length+contigList.length());
     for(unsigned int i=0;i<contigList.length();i++)
-        qDebug()<<length[i]<<endl;
+        //qDebug()<<length[i]<<endl;
 
     if(contigList.length()%2==0)
         medianLength = (length[contigList.length()/2]+length[contigList.length()/2-1])/2;
@@ -256,12 +256,12 @@ void MainWindow::code()
         medianLength = length[contigList.length()/2];
 
     unsigned int sum=0;
-    qDebug()<<length[contigList.length()-1];
+    //qDebug()<<length[contigList.length()-1];
     for(unsigned int i=contigList.length()-1;i>=0;i--)
     {
-        qDebug()<<"for";
+        //qDebug()<<"for";
         sum=length[i]+sum;
-        qDebug()<<i;
+        //qDebug()<<i;
         if(sum>=totalLength/2)
         {
             N50Length = length[i];
