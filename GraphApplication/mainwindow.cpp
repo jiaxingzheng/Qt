@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
     guideButton->setGeometry(100,0,100,30);
     scene->update();
     view->update();
+
+
     initData();
 
 
@@ -70,7 +72,7 @@ void MainWindow::initData()
     for(int i=0;i<textList.length();i++)
     {
         qDebug()<<textList[i]<<endl;
-        QStringList templist = textList[i].split(' ');
+        QStringList templist = textList[i].split(',');
         qDebug()<<templist.length()<<endl;
         spots[templist[0].toInt()].name = templist[1];
         list.append(templist[1]);
@@ -137,7 +139,7 @@ void MainWindow::traverse()
     QLabel *DFSResult = new QLabel(string);
 
     QDialog *traverseDialog = new QDialog();
-    traverseDialog->setFixedSize(500,400);
+    traverseDialog->setFixedSize(800,400);
     traverseDialog->setWindowTitle("Traverse");
     QVBoxLayout *layout = new QVBoxLayout;
     QLabel *title = new QLabel("Traverse");
@@ -199,9 +201,11 @@ void MainWindow::guide()
     
     startInfo = new QLabel;
     startInfo->setText("Start Info : "+spots[startIndex].introduction);
+    connect(startInfo,SIGNAL(linkActivated(QString)),this,SLOT(openFile(QString)));
 
     endInfo = new QLabel;
     endInfo->setText("End Info :"+spots[endIndex].introduction);
+    connect(endInfo,SIGNAL(linkActivated(QString)),this,SLOT(openFile(QString)));
 
     shortestPath = new QLabel;
 
@@ -274,7 +278,8 @@ void MainWindow::shortestPath_Floyd()
         {
             for(w=0;w<graph->n();++w)
             {
-                if((shortestPathTable[v][w]>shortestPathTable[v][k]+shortestPathTable[k][w]||shortestPathTable[v][w]==0)&&shortestPathTable[v][k]!=0&&shortestPathTable[k][w]!=0)
+                if((shortestPathTable[v][w]>shortestPathTable[v][k]+shortestPathTable[k][w]||shortestPathTable[v][w]==0)
+                        &&shortestPathTable[v][k]!=0&&shortestPathTable[k][w]!=0)
                 {
                     shortestPathTable[v][w]=shortestPathTable[v][k]+shortestPathTable[k][w];
                     pathmatrix[v][w]=pathmatrix[v][k];
@@ -282,4 +287,9 @@ void MainWindow::shortestPath_Floyd()
             }
         }
     }
+}
+void MainWindow::openFile(QString filename)
+{
+    qDebug()<<filename;
+    QDesktopServices::openUrl(QUrl::fromLocalFile(filename));
 }

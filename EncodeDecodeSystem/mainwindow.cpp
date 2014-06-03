@@ -395,6 +395,7 @@ template <typename E> void MainWindow::remove(HuffTree<E>** TreeArray, int count
 }
 void MainWindow::openCodeFile(QString filename)
 {
+
     QDesktopServices::openUrl(QUrl::fromLocalFile(filename));
 
 }

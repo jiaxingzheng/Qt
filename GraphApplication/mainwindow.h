@@ -19,6 +19,8 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QComboBox>
+#include <QDesktopServices>
+#include <QUrl>
 #include "Graphm.h"
 
 
@@ -72,6 +74,7 @@ public slots:
 
     void changeStartIndex(int index);
     void changeEndIndex(int index);
+    void openFile(QString filename);
 
 
 };
